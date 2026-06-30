@@ -18,14 +18,23 @@ function generateMockDataList(count: number) {
 
   for (let i = 0; i < count; i++) {
     const dataItem: Record<string, any> = {
-      id: faker.string.uuid(),
-      name: faker.commerce.product(),
+      id: i + 1,
+      username: faker.internet.username(),
+      nickname: faker.person.fullName(),
+      email: faker.internet.email(),
+      phone: faker.phone.number(),
+      avatar: '',
+      deptId: faker.number.int({ min: 100, max: 110 }),
+      deptName: faker.commerce.department(),
       status: faker.helpers.arrayElement([0, 1]),
-      createTime: formatterCN.format(
-        faker.date.between({ from: '2022-01-01', to: '2025-01-01' }),
+      pwdForceChange: faker.helpers.arrayElement([0, 1]),
+      tenantId: 1,
+      sys001: formatterCN.format(
+        faker.date.between({ from: '2022-01-01', to: '2026-01-01' }),
       ),
-      deptId: faker.string.uuid(),
-      remark: faker.lorem.sentence(),
+      sys002: formatterCN.format(
+        faker.date.between({ from: '2026-01-01', to: '2026-06-01' }),
+      ),
     };
 
     dataList.push(dataItem);
@@ -45,41 +54,21 @@ export default eventHandler(async (event) => {
   const {
     page = 1,
     pageSize = 20,
-    name,
-    id,
-    remark,
-    startTime,
-    endTime,
-    deptId,
+    username,
     status,
+    deptId,
   } = getQuery(event);
   let listData = structuredClone(mockData);
-  if (name) {
+  if (username) {
     listData = listData.filter((item) =>
-      item.name.toLowerCase().includes(String(name).toLowerCase()),
+      item.username.toLowerCase().includes(String(username).toLowerCase()),
     );
-  }
-  if (id) {
-    listData = listData.filter((item) =>
-      item.id.toLowerCase().includes(String(id).toLowerCase()),
-    );
-  }
-  if (remark) {
-    listData = listData.filter((item) =>
-      item.remark?.toLowerCase()?.includes(String(remark).toLowerCase()),
-    );
-  }
-  if (startTime) {
-    listData = listData.filter((item) => item.createTime >= startTime);
-  }
-  if (endTime) {
-    listData = listData.filter((item) => item.createTime <= endTime);
   }
   if (['0', '1'].includes(status as string)) {
     listData = listData.filter((item) => item.status === Number(status));
   }
   if (deptId) {
-    listData = listData.filter((item) => item.deptId === deptId);
+    listData = listData.filter((item) => String(item.deptId) === String(deptId));
   }
   return usePageResponseSuccess(page as string, pageSize as string, listData);
 });

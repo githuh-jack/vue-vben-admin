@@ -1,7 +1,6 @@
 import { faker } from '@faker-js/faker';
 import { eventHandler, getQuery } from 'h3';
 import { verifyAccessToken } from '~/utils/jwt-utils';
-import { getMenuIds, MOCK_MENU_LIST } from '~/utils/mock-data';
 import { unAuthorizedResponse, usePageResponseSuccess } from '~/utils/response';
 
 const formatterCN = new Intl.DateTimeFormat('zh-CN', {
@@ -14,21 +13,23 @@ const formatterCN = new Intl.DateTimeFormat('zh-CN', {
   second: '2-digit',
 });
 
-const menuIds = getMenuIds(MOCK_MENU_LIST);
-
 function generateMockDataList(count: number) {
   const dataList = [];
 
   for (let i = 0; i < count; i++) {
     const dataItem: Record<string, any> = {
-      id: faker.string.uuid(),
-      name: faker.commerce.product(),
+      id: i + 1,
+      roleName: faker.person.jobTitle(),
+      roleKey: faker.hacker.noun(),
+      sort: faker.number.int({ min: 0, max: 10 }),
       status: faker.helpers.arrayElement([0, 1]),
-      createTime: formatterCN.format(
-        faker.date.between({ from: '2022-01-01', to: '2025-01-01' }),
-      ),
-      permissions: faker.helpers.arrayElements(menuIds),
       remark: faker.lorem.sentence(),
+      sys001: formatterCN.format(
+        faker.date.between({ from: '2022-01-01', to: '2026-01-01' }),
+      ),
+      sys002: formatterCN.format(
+        faker.date.between({ from: '2026-01-01', to: '2026-06-01' }),
+      ),
     };
 
     dataList.push(dataItem);
@@ -37,7 +38,7 @@ function generateMockDataList(count: number) {
   return dataList;
 }
 
-const mockData = generateMockDataList(100);
+const mockData = generateMockDataList(50);
 
 export default eventHandler(async (event) => {
   const userinfo = verifyAccessToken(event);
@@ -48,34 +49,14 @@ export default eventHandler(async (event) => {
   const {
     page = 1,
     pageSize = 20,
-    name,
-    id,
-    remark,
-    startTime,
-    endTime,
+    roleName,
     status,
   } = getQuery(event);
   let listData = structuredClone(mockData);
-  if (name) {
+  if (roleName) {
     listData = listData.filter((item) =>
-      item.name.toLowerCase().includes(String(name).toLowerCase()),
+      item.roleName.toLowerCase().includes(String(roleName).toLowerCase()),
     );
-  }
-  if (id) {
-    listData = listData.filter((item) =>
-      item.id.toLowerCase().includes(String(id).toLowerCase()),
-    );
-  }
-  if (remark) {
-    listData = listData.filter((item) =>
-      item.remark?.toLowerCase()?.includes(String(remark).toLowerCase()),
-    );
-  }
-  if (startTime) {
-    listData = listData.filter((item) => item.createTime >= startTime);
-  }
-  if (endTime) {
-    listData = listData.filter((item) => item.createTime <= endTime);
   }
   if (['0', '1'].includes(status as string)) {
     listData = listData.filter((item) => item.status === Number(status));

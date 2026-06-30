@@ -47,11 +47,14 @@ function createRequestClient(baseURL: string, options?: RequestClientOptions) {
 
   /**
    * 刷新token逻辑
+   * baseRequestClient返回完整Axios响应，resp.data为响应体{code,data,msg}，resp.data.data为实际token
    */
   async function doRefreshToken() {
     const accessStore = useAccessStore();
     const resp = await refreshTokenApi();
-    const newToken = resp.data;
+    // baseRequestClient无响应拦截器，resp是Axios响应对象
+    // resp.data = { code: 0, data: "token", msg: "操作成功" }
+    const newToken = resp.data?.data || resp.data;
     accessStore.setAccessToken(newToken);
     return newToken;
   }
