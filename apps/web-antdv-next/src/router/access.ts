@@ -29,7 +29,21 @@ async function generateAccess(options: GenerateMenuAndRoutesOptions) {
         content: `${$t('common.loadingMenu')}...`,
         duration: 1.5,
       });
-      return await getAllMenusApi();
+      const menus = await getAllMenusApi();
+      // 后端返回的 meta.title 可能为 i18n key，这里统一做一次翻译
+      const translateMenus = (list: typeof menus): typeof menus => {
+        return list.map((item) => ({
+          ...item,
+          meta: {
+            ...item.meta,
+            title: item.meta?.title
+              ? $t(item.meta.title as string)
+              : item.meta?.title,
+          },
+          children: item.children ? translateMenus(item.children) : undefined,
+        }));
+      };
+      return translateMenus(menus);
     },
     // 可以指定没有权限跳转403页面
     forbiddenComponent,

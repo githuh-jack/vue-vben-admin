@@ -51,7 +51,9 @@ function createRequestClient(baseURL: string, options?: RequestClientOptions) {
   async function doRefreshToken() {
     const accessStore = useAccessStore();
     const resp = await refreshTokenApi();
-    const newToken = resp.data;
+    // 后端统一响应格式 { code, data, msg }，baseRequestClient未配置responseReturn，
+    // 因此 resp.data 为响应体，token 在 resp.data.data 中
+    const newToken = resp.data?.data || resp.data;
     accessStore.setAccessToken(newToken);
     return newToken;
   }

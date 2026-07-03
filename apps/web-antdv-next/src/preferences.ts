@@ -9,5 +9,7 @@ export const overridesPreferences = defineOverridesPreferences({
   // overrides
   app: {
     name: import.meta.env.VITE_APP_TITLE,
+    // 使用后端接口返回菜单数据
+    accessMode: 'backend',
   },
 });
