@@ -11,5 +11,20 @@
     "title": "概览",
     "analytics": "分析页",
     "workspace": "工作台"
+  },
+  "system": {
+    "title": "系统管理",
+    "dept": "组织管理",
+    "dict": "字典管理",
+    "menu": "菜单管理",
+    "resource": "资源管理",
+    "role": "角色管理",
+    "permission": "权限配置",
+    "user": "用户管理",
+    "userRole": "用户角色管理",
+    "roleDept": "角色组织管理",
+    "roleResource": "角色资源管理",
+    "operLog": "操作日志",
+    "loginLog": "登录日志"
   }
 }

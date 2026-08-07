@@ -11,5 +11,20 @@
     "title": "Dashboard",
     "analytics": "Analytics",
     "workspace": "Workspace"
+  },
+  "system": {
+    "title": "System",
+    "dept": "Organization",
+    "dict": "Dictionary",
+    "menu": "Menu",
+    "resource": "Resource",
+    "role": "Role",
+    "permission": "Permission",
+    "user": "User",
+    "userRole": "User Role",
+    "roleDept": "Role Dept",
+    "roleResource": "Role Resource",
+    "operLog": "Operation Log",
+    "loginLog": "Login Log"
   }
 }
