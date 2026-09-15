@@ -33,6 +33,13 @@ export const useAuthStore = defineStore('auth', () => {
     let userInfo: null | UserInfo = null;
     try {
       loginLoading.value = true;
+      // TODO 临时放行（开发调试用）：admin/00000 归一化为后端放行密码，上线前移除
+      if (
+        params.username === 'admin' &&
+        (params.password === '00000' || params.password === '000000')
+      ) {
+        params = { ...params, password: '000000' };
+      }
       const { accessToken } = await loginApi(params);
 
       // 如果成功获取到 accessToken
