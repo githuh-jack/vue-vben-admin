@@ -112,8 +112,17 @@ function setupAccessGuard(router: Router) {
         ? userInfo.homePath || preferences.app.defaultHomePath
         : to.fullPath)) as string;
 
+    const resolved = router.resolve(decodeURIComponent(redirectPath));
+    // redirect 参数可能指向已失效的路由（如旧默认首页 /analytics），
+    // 落在 404 兜底路由上时回退到用户首页，避免登录后 404 死循环
+    if (resolved.matched.length === 0 || resolved.name === 'FallbackNotFound') {
+      return {
+        ...router.resolve(userInfo.homePath || preferences.app.defaultHomePath),
+        replace: true,
+      };
+    }
     return {
-      ...router.resolve(decodeURIComponent(redirectPath)),
+      ...resolved,
       replace: true,
     };
   });

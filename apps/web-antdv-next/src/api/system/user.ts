@@ -10,16 +10,22 @@ export namespace SystemUserApi {
     username: string;
     /** 密码 */
     password?: string;
-    /** 昵称(后端字段nickname, 前端映射为realName) */
+    /** 昵称(笔名) */
     nickname?: string;
+    /** 姓名 */
+    realName?: string;
     /** 邮箱 */
     email?: string;
     /** 手机号 */
     phone?: string;
     /** 头像 */
     avatar?: string;
-    /** 部门ID */
+    /** 主部门ID */
     deptId?: number;
+    /** 所属部门ID集合(多部门，第一个为主部门) */
+    deptIds?: number[];
+    /** 部门名称集合展示(逗号分隔) */
+    deptNames?: string;
     /** 部门名称 */
     deptName?: string;
     /** 状态 0停用 1启用 */

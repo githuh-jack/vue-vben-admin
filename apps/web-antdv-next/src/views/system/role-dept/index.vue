@@ -222,7 +222,8 @@ onMounted(() => {
 </template>
 
 <style>
+/* 选中行高亮：使用半透明主色，暗色/亮色主题下文字均可读 */
 .role-row-selected > td {
-  background-color: #e6f4ff !important;
+  background-color: rgba(22, 119, 255, 0.15) !important;
 }
 </style>

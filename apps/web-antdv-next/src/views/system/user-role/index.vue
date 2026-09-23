@@ -41,7 +41,7 @@ const saveLoading = ref(false);
 // 用户表格列定义
 const userColumns = [
   { title: '用户名', dataIndex: 'username', ellipsis: true },
-  { title: '昵称', dataIndex: 'realName', ellipsis: true },
+  { title: '昵称', dataIndex: 'nickname', ellipsis: true },
   { title: '状态', dataIndex: 'status', width: 80 },
 ];
 
@@ -195,7 +195,8 @@ onMounted(() => {
 </template>
 
 <style>
+/* 选中行高亮：使用半透明主色，暗色/亮色主题下文字均可读 */
 .user-row-selected > td {
-  background-color: #e6f4ff !important;
+  background-color: rgba(22, 119, 255, 0.15) !important;
 }
 </style>

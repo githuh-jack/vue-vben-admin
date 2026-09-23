@@ -71,10 +71,12 @@ const formData = reactive<SystemUserApi.User>({
   username: '',
   password: '',
   nickname: '',
+  realName: '',
   email: '',
   phone: '',
   avatar: '',
   deptId: undefined,
+  deptIds: [],
   status: 1,
 });
 
@@ -109,6 +111,7 @@ const deptTreeSelectData = computed(() => {
 const columns = [
   { title: '用户名', dataIndex: 'username', key: 'username' },
   { title: '昵称', dataIndex: 'nickname', key: 'nickname' },
+  { title: '姓名', dataIndex: 'realName', key: 'realName' },
   { title: '部门', dataIndex: 'deptName', key: 'deptName' },
   { title: '手机号', dataIndex: 'phone', key: 'phone' },
   { title: '邮箱', dataIndex: 'email', key: 'email' },
@@ -170,10 +173,12 @@ function resetForm() {
     username: '',
     password: '',
     nickname: '',
+    realName: '',
     email: '',
     phone: '',
     avatar: '',
     deptId: undefined,
+    deptIds: [],
     status: 1,
   });
 }
@@ -190,6 +195,13 @@ function handleAdd() {
 function handleEdit(record: SystemUserApi.User) {
   resetForm();
   Object.assign(formData, record);
+  // 多部门回填：优先关系表数据，其次主部门
+  formData.deptIds =
+    record.deptIds && record.deptIds.length > 0
+      ? [...record.deptIds]
+      : record.deptId
+        ? [record.deptId]
+        : [];
   // 编辑时不修改密码
   formData.password = '';
   isEdit.value = true;
@@ -327,7 +339,10 @@ onMounted(() => {
       @change="handleTableChange"
     >
       <template #bodyCell="{ column, record }">
-        <template v-if="column.dataIndex === 'status'">
+        <template v-if="column.dataIndex === 'deptName'">
+          {{ record.deptNames || record.deptName || '' }}
+        </template>
+        <template v-else-if="column.dataIndex === 'status'">
           <Switch
             :checked="record.status === 1"
             checked-children="启用"
@@ -388,11 +403,15 @@ onMounted(() => {
         <FormItem label="昵称" name="nickname">
           <Input v-model:value="formData.nickname" placeholder="请输入昵称" />
         </FormItem>
-        <FormItem label="部门" name="deptId">
+        <FormItem label="姓名" name="realName">
+          <Input v-model:value="formData.realName" placeholder="请输入姓名" />
+        </FormItem>
+        <FormItem label="部门" name="deptIds">
           <TreeSelect
-            v-model:value="formData.deptId"
+            v-model:value="formData.deptIds"
             :tree-data="deptTreeSelectData"
-            placeholder="请选择部门"
+            multiple
+            placeholder="请选择部门(可多选，第一个为主部门)"
             tree-default-expand-all
             tree-node-filter-prop="title"
           />

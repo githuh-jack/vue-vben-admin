@@ -11,5 +11,7 @@ export const overridesPreferences = defineOverridesPreferences({
     name: import.meta.env.VITE_APP_TITLE,
     // 使用后端接口返回菜单数据
     accessMode: 'backend',
+    // 登录后默认落地页（vben 默认的 /analytics 在 backend 菜单模式下未注册，会 404）
+    defaultHomePath: '/dashboard/analytics',
   },
 });
